@@ -1,0 +1,487 @@
+import type { Tool, ToolCategory } from "@/types/tool";
+
+export const TOOL_CATEGORIES: Record<ToolCategory, { label: string; description: string }> = {
+  PASSWORDS: {
+    label: "Passwords",
+    description: "Generate strong, secure passwords for any use case",
+  },
+  RECOVERY: {
+    label: "Recovery",
+    description: "Backup codes, recovery keys, and temporary passwords",
+  },
+  HOME_GAMING: {
+    label: "Home & Gaming",
+    description: "WiFi passwords and home network security",
+  },
+  DEVELOPER: {
+    label: "Developer",
+    description: "API keys, JWTs, UUIDs, and developer credentials",
+  },
+  FRAMEWORKS: {
+    label: "Frameworks",
+    description: "Framework-specific secret keys and configurations",
+  },
+  ENCRYPTION: {
+    label: "Encryption",
+    description: "Encryption keys, hashes, salts, and cryptographic primitives",
+  },
+  ADVANCED: {
+    label: "Advanced",
+    description: "SSH keys, PGP, WireGuard, VAPID, and advanced crypto",
+  },
+  USERNAME: {
+    label: "Username",
+    description: "Generate unique, memorable usernames",
+  },
+  EDUCATION: {
+    label: "Education",
+    description: "Security guides, tutorials, and best practices",
+  },
+};
+
+export const TOOLS: Tool[] = [
+  // PASSWORDS
+  {
+    id: "password",
+    name: "Password Generator",
+    slug: "password",
+    category: "PASSWORDS",
+    description: "Generate cryptographically secure random passwords with customizable length and character sets.",
+    keywords: ["password", "password generator", "random password", "secure password", "strong password"],
+    icon: "KeyRound",
+    componentPath: "@/pages/tools/PasswordGenerator",
+  },
+  {
+    id: "passphrase",
+    name: "Passphrase Generator",
+    slug: "passphrase",
+    category: "PASSWORDS",
+    description: "Generate memorable passphrases using the diceware method for maximum security and usability.",
+    keywords: ["passphrase", "diceware", "word password", "memorable password"],
+    icon: "BookOpen",
+    componentPath: "@/pages/tools/PassphraseGenerator",
+  },
+  {
+    id: "pronounceable-password",
+    name: "Pronounceable Password",
+    slug: "pronounceable-password",
+    category: "PASSWORDS",
+    description: "Generate passwords that are easy to pronounce and remember, but still cryptographically secure.",
+    keywords: ["pronounceable password", "readable password", "memorable password"],
+    icon: "MessageSquare",
+    componentPath: "@/pages/tools/PronounceablePassword",
+  },
+  {
+    id: "memorable-password",
+    name: "Memorable Password",
+    slug: "memorable-password",
+    category: "PASSWORDS",
+    description: "Create passwords that balance memorability with strong security using words and numbers.",
+    keywords: ["memorable password", "easy password", "word password"],
+    icon: "Brain",
+    componentPath: "@/pages/tools/MemorablePassword",
+  },
+  {
+    id: "master-password",
+    name: "Master Password",
+    slug: "master-password",
+    category: "PASSWORDS",
+    description: "Generate a high-entropy master password for use with password managers.",
+    keywords: ["master password", "master key", "password manager password"],
+    icon: "Crown",
+    componentPath: "@/pages/tools/MasterPassword",
+  },
+  {
+    id: "bulk-password",
+    name: "Bulk Password Generator",
+    slug: "bulk-password",
+    category: "PASSWORDS",
+    description: "Generate multiple unique passwords at once for batch provisioning.",
+    keywords: ["bulk password", "multiple passwords", "batch password generator"],
+    icon: "List",
+    componentPath: "@/pages/tools/BulkPassword",
+  },
+  {
+    id: "password-presets",
+    name: "Password Presets",
+    slug: "password-presets",
+    category: "PASSWORDS",
+    description: "Choose from curated password presets optimized for different security requirements.",
+    keywords: ["password presets", "password profiles", "password templates"],
+    icon: "Settings2",
+    componentPath: "@/pages/tools/PasswordPresets",
+  },
+  {
+    id: "8-char-password",
+    name: "8 Character Password",
+    slug: "8-char-password",
+    category: "PASSWORDS",
+    description: "Generate a secure 8-character password — the minimum recommended length.",
+    keywords: ["8 character password", "short password", "minimum password"],
+    icon: "Hash",
+    componentPath: "@/pages/tools/EightCharPassword",
+  },
+  {
+    id: "16-char-password",
+    name: "16 Character Password",
+    slug: "16-char-password",
+    category: "PASSWORDS",
+    description: "Generate a strong 16-character password suitable for most accounts.",
+    keywords: ["16 character password", "long password", "strong password"],
+    icon: "Hash",
+    componentPath: "@/pages/tools/SixteenCharPassword",
+  },
+  {
+    id: "no-symbols-password",
+    name: "No Symbols Password",
+    slug: "no-symbols-password",
+    category: "PASSWORDS",
+    description: "Generate a password using only alphanumeric characters — no special symbols.",
+    keywords: ["no symbols password", "alphanumeric password", "letters numbers only"],
+    icon: "Type",
+    componentPath: "@/pages/tools/NoSymbolsPassword",
+  },
+  {
+    id: "letters-only-password",
+    name: "Letters Only Password",
+    slug: "letters-only-password",
+    category: "PASSWORDS",
+    description: "Generate a password using only uppercase and lowercase letters.",
+    keywords: ["letters only password", "alphabetic password", "no numbers password"],
+    icon: "CaseSensitive",
+    componentPath: "@/pages/tools/LettersOnlyPassword",
+  },
+  {
+    id: "pin",
+    name: "PIN Generator",
+    slug: "pin",
+    category: "PASSWORDS",
+    description: "Generate cryptographically secure numeric PINs for devices and accounts.",
+    keywords: ["pin generator", "pin code", "numeric password", "4 digit pin", "6 digit pin"],
+    icon: "Binary",
+    componentPath: "@/pages/tools/PinGenerator",
+  },
+  {
+    id: "password-strength",
+    name: "Password Strength Checker",
+    slug: "password-strength",
+    category: "PASSWORDS",
+    description: "Analyze the strength and entropy of any password locally — nothing is sent to servers.",
+    keywords: ["password strength", "password checker", "password entropy", "password security"],
+    icon: "ShieldCheck",
+    componentPath: "@/pages/tools/PasswordStrength",
+  },
+
+  // RECOVERY
+  {
+    id: "backup-codes",
+    name: "Backup Codes",
+    slug: "backup-codes",
+    category: "RECOVERY",
+    description: "Generate a set of one-time backup codes for account recovery.",
+    keywords: ["backup codes", "recovery codes", "2fa backup", "emergency codes"],
+    icon: "LifeBuoy",
+    componentPath: "@/pages/tools/BackupCodes",
+  },
+  {
+    id: "recovery-key",
+    name: "Recovery Key",
+    slug: "recovery-key",
+    category: "RECOVERY",
+    description: "Generate a long-form recovery key for encrypted storage or account access.",
+    keywords: ["recovery key", "backup key", "emergency key", "account recovery"],
+    icon: "KeySquare",
+    componentPath: "@/pages/tools/RecoveryKey",
+  },
+  {
+    id: "temporary-password",
+    name: "Temporary Password",
+    slug: "temporary-password",
+    category: "RECOVERY",
+    description: "Generate a temporary password for short-term account access or provisioning.",
+    keywords: ["temporary password", "temp password", "one time password", "provisioning password"],
+    icon: "Timer",
+    componentPath: "@/pages/tools/TemporaryPassword",
+  },
+
+  // HOME/GAMING
+  {
+    id: "wifi-password",
+    name: "WiFi Password Generator",
+    slug: "wifi-password",
+    category: "HOME_GAMING",
+    description: "Generate a strong, memorable WiFi password for your home or office network.",
+    keywords: ["wifi password generator", "wifi password", "network password", "router password", "wireless password"],
+    icon: "Wifi",
+    componentPath: "@/pages/tools/WifiPassword",
+  },
+
+  // DEVELOPER
+  {
+    id: "api-key",
+    name: "API Key Generator",
+    slug: "api-key",
+    category: "DEVELOPER",
+    description: "Generate secure API keys in various formats: hex, base64, base58, UUID-based.",
+    keywords: ["api key generator", "api key", "secret key", "access token", "developer key"],
+    icon: "Key",
+    componentPath: "@/pages/tools/ApiKey",
+  },
+  {
+    id: "jwt-secret",
+    name: "JWT Secret Generator",
+    slug: "jwt-secret",
+    category: "DEVELOPER",
+    description: "Generate cryptographically secure JWT signing secrets (HS256, HS384, HS512).",
+    keywords: ["jwt secret", "jwt generator", "json web token", "signing key", "jwt signing secret"],
+    icon: "FileKey",
+    componentPath: "@/pages/tools/JwtSecret",
+  },
+  {
+    id: "uuid",
+    name: "UUID Generator",
+    slug: "uuid",
+    category: "DEVELOPER",
+    description: "Generate RFC 4122 compliant UUIDs v4 and v7 in bulk.",
+    keywords: ["uuid generator", "uuid", "guid", "unique identifier", "uuid v4", "uuid v7"],
+    icon: "Fingerprint",
+    componentPath: "@/pages/tools/UuidGenerator",
+  },
+  {
+    id: "random-string",
+    name: "Random String Generator",
+    slug: "random-string",
+    category: "DEVELOPER",
+    description: "Generate random strings with custom length, charset, and format (hex, base64, alphanumeric).",
+    keywords: ["random string", "random string generator", "random token", "random bytes"],
+    icon: "Shuffle",
+    componentPath: "@/pages/tools/RandomString",
+  },
+  {
+    id: "totp-2fa",
+    name: "TOTP / 2FA Secret",
+    slug: "totp-2fa",
+    category: "DEVELOPER",
+    description: "Generate TOTP secrets for implementing two-factor authentication in your application.",
+    keywords: ["totp", "2fa secret", "authenticator secret", "otp secret", "google authenticator"],
+    icon: "SmartphoneNfc",
+    componentPath: "@/pages/tools/TotpSecret",
+  },
+  {
+    id: "test-card",
+    name: "Test Card Generator",
+    slug: "test-card",
+    category: "DEVELOPER",
+    description: "Official Stripe and Braintree test card numbers for payment integration testing.",
+    keywords: ["test card", "stripe test card", "braintree test card", "payment testing", "credit card testing"],
+    icon: "CreditCard",
+    componentPath: "@/pages/tools/TestCard",
+  },
+
+  // FRAMEWORKS
+  {
+    id: "django-secret",
+    name: "Django Secret Key",
+    slug: "django-secret",
+    category: "FRAMEWORKS",
+    description: "Generate a Django-compatible SECRET_KEY for your settings.py configuration.",
+    keywords: ["django secret key", "django settings", "python secret key", "django configuration"],
+    icon: "Code2",
+    componentPath: "@/pages/tools/DjangoSecret",
+  },
+  {
+    id: "laravel-app-key",
+    name: "Laravel APP_KEY",
+    slug: "laravel-app-key",
+    category: "FRAMEWORKS",
+    description: "Generate a Laravel-compatible APP_KEY (base64-encoded 32-byte key) for your .env file.",
+    keywords: ["laravel app key", "laravel secret", "php secret key", "laravel env"],
+    icon: "Code2",
+    componentPath: "@/pages/tools/LaravelAppKey",
+  },
+  {
+    id: "flask-secret",
+    name: "Flask Secret Key",
+    slug: "flask-secret",
+    category: "FRAMEWORKS",
+    description: "Generate a secure Flask SECRET_KEY for session signing and CSRF protection.",
+    keywords: ["flask secret key", "flask settings", "python flask", "flask configuration"],
+    icon: "Code2",
+    componentPath: "@/pages/tools/FlaskSecret",
+  },
+  {
+    id: "wordpress-salts",
+    name: "WordPress Salts",
+    slug: "wordpress-salts",
+    category: "FRAMEWORKS",
+    description: "Generate WordPress security salts and keys for your wp-config.php file.",
+    keywords: ["wordpress salts", "wordpress keys", "wp-config", "wordpress security"],
+    icon: "Code2",
+    componentPath: "@/pages/tools/WordPressSalts",
+  },
+
+  // ENCRYPTION
+  {
+    id: "encryption-key",
+    name: "Encryption Key Generator",
+    slug: "encryption-key",
+    category: "ENCRYPTION",
+    description: "Generate symmetric encryption keys for AES, ChaCha20, and other algorithms.",
+    keywords: ["encryption key", "encryption key generator", "symmetric key", "secret key"],
+    icon: "Lock",
+    componentPath: "@/pages/tools/EncryptionKey",
+  },
+  {
+    id: "aes-key",
+    name: "AES Key Generator",
+    slug: "aes-key",
+    category: "ENCRYPTION",
+    description: "Generate AES-128, AES-192, and AES-256 keys in hex and base64 formats.",
+    keywords: ["aes key", "aes-256 key", "aes key generator", "symmetric encryption key"],
+    icon: "Shield",
+    componentPath: "@/pages/tools/AesKey",
+  },
+  {
+    id: "rsa-key",
+    name: "RSA Key Generator",
+    slug: "rsa-key",
+    category: "ENCRYPTION",
+    description: "Generate RSA key pairs (2048, 4096-bit) in PEM format using SubtleCrypto.",
+    keywords: ["rsa key", "rsa key generator", "public key", "private key", "asymmetric encryption"],
+    icon: "ShieldPlus",
+    componentPath: "@/pages/tools/RsaKey",
+  },
+  {
+    id: "hmac-key",
+    name: "HMAC Key Generator",
+    slug: "hmac-key",
+    category: "ENCRYPTION",
+    description: "Generate HMAC signing keys for SHA-256, SHA-384, and SHA-512 algorithms.",
+    keywords: ["hmac key", "hmac generator", "message authentication", "signing key"],
+    icon: "FileLock",
+    componentPath: "@/pages/tools/HmacKey",
+  },
+  {
+    id: "hash-generator",
+    name: "Hash Generator",
+    slug: "hash-generator",
+    category: "ENCRYPTION",
+    description: "Generate SHA-256, SHA-384, SHA-512 hashes of text or files in the browser.",
+    keywords: ["hash generator", "sha256", "sha512", "checksum", "file hash"],
+    icon: "Hash",
+    componentPath: "@/pages/tools/HashGenerator",
+  },
+  {
+    id: "salt-generator",
+    name: "Salt Generator",
+    slug: "salt-generator",
+    category: "ENCRYPTION",
+    description: "Generate cryptographic salts for password hashing and key derivation.",
+    keywords: ["salt generator", "crypto salt", "password salt", "random salt", "bcrypt salt"],
+    icon: "Sparkles",
+    componentPath: "@/pages/tools/SaltGenerator",
+  },
+
+  // ADVANCED
+  {
+    id: "ssh-key",
+    name: "SSH Key Generator",
+    slug: "ssh-key",
+    category: "ADVANCED",
+    description: "Generate Ed25519 and RSA SSH key pairs entirely in the browser.",
+    keywords: ["ssh key generator", "ssh keygen", "ed25519", "rsa ssh key", "public key authentication"],
+    icon: "Terminal",
+    componentPath: "@/pages/tools/SshKey",
+  },
+  {
+    id: "pgp-gpg",
+    name: "PGP/GPG Helper",
+    slug: "pgp-gpg",
+    category: "ADVANCED",
+    description: "Generate PGP key pairs for email encryption and code signing using OpenPGP.js.",
+    keywords: ["pgp key", "gpg key", "openpgp", "email encryption", "pgp keygen"],
+    icon: "MailLock",
+    componentPath: "@/pages/tools/PgpGpg",
+  },
+  {
+    id: "wireguard-key",
+    name: "WireGuard Key Generator",
+    slug: "wireguard-key",
+    category: "ADVANCED",
+    description: "Generate WireGuard private/public key pairs using Curve25519 in the browser.",
+    keywords: ["wireguard key", "wireguard keygen", "vpn key", "curve25519"],
+    icon: "Network",
+    componentPath: "@/pages/tools/WireguardKey",
+  },
+  {
+    id: "vapid-key",
+    name: "VAPID Key Generator",
+    slug: "vapid-key",
+    category: "ADVANCED",
+    description: "Generate VAPID key pairs for Web Push notifications.",
+    keywords: ["vapid key", "web push key", "push notification key", "vapid"],
+    icon: "Bell",
+    componentPath: "@/pages/tools/VapidKey",
+  },
+  {
+    id: "secret-key",
+    name: "Secret Key Generator",
+    slug: "secret-key",
+    category: "ADVANCED",
+    description: "Generate high-entropy secret keys in multiple formats for any security application.",
+    keywords: ["secret key generator", "random key", "entropy key", "cryptographic key"],
+    icon: "KeyRound",
+    componentPath: "@/pages/tools/SecretKey",
+  },
+
+  // USERNAME
+  {
+    id: "username-generator",
+    name: "Username Generator",
+    slug: "username-generator",
+    category: "USERNAME",
+    description: "Generate unique, creative usernames that don't leak personal information.",
+    keywords: ["username generator", "random username", "anonymous username", "nickname generator"],
+    icon: "UserCircle",
+    componentPath: "@/pages/tools/UsernameGenerator",
+  },
+
+  // EDUCATION
+  {
+    id: "security-guides",
+    name: "Security Guides",
+    slug: "security-guides",
+    category: "EDUCATION",
+    description: "Comprehensive guides on password security, encryption, and cryptographic best practices.",
+    keywords: ["security guide", "password security", "encryption guide", "cryptography tutorial"],
+    icon: "GraduationCap",
+    componentPath: "@/pages/tools/SecurityGuides",
+  },
+];
+
+/** Look up a tool by its slug */
+export function getToolBySlug(slug: string): Tool | undefined {
+  return TOOLS.find((t) => t.slug === slug);
+}
+
+/** Get all tools in a category */
+export function getToolsByCategory(category: ToolCategory): Tool[] {
+  return TOOLS.filter((t) => t.category === category);
+}
+
+/** Get tools ordered by category for sidebar rendering */
+export function getToolsGroupedByCategory(): Array<{
+  category: ToolCategory;
+  label: string;
+  description: string;
+  tools: Tool[];
+}> {
+  return (Object.keys(TOOL_CATEGORIES) as ToolCategory[])
+    .map((category) => ({
+      category,
+      label: TOOL_CATEGORIES[category].label,
+      description: TOOL_CATEGORIES[category].description,
+      tools: getToolsByCategory(category),
+    }))
+    .filter((group) => group.tools.length > 0);
+}
