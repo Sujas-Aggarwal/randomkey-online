@@ -56,18 +56,15 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps): Rea
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-hidden p-0 shadow-2xl max-w-2xl">
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
-          <div className="flex items-center border-b px-3" aria-label="Search">
+          <div className="flex items-center border-b px-3 pr-12" aria-label="Search">
             <Search className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
             <Command.Input
               value={search}
               onValueChange={setSearch}
               placeholder="Search tools..."
-              className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-11 w-full bg-transparent py-3 text-sm outline-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Search tools"
             />
-            <kbd className="ml-2 hidden rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-flex">
-              ESC
-            </kbd>
           </div>
           <Command.List
             className="max-h-[400px] overflow-y-auto overflow-x-hidden"
@@ -101,11 +98,19 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps): Rea
             )}
           </Command.List>
           <div className="border-t px-3 py-2 flex items-center justify-between text-xs text-muted-foreground">
-            <span>
-              <kbd className="rounded border bg-muted px-1 py-0.5 font-mono">↑↓</kbd>
-              {" "}navigate{" "}
-              <kbd className="rounded border bg-muted px-1 py-0.5 font-mono">↵</kbd>
-              {" "}select
+            <span className="flex items-center gap-2">
+              <span>
+                <kbd className="rounded border bg-muted px-1 py-0.5 font-mono">↑↓</kbd>
+                {" "}navigate
+              </span>
+              <span>
+                <kbd className="rounded border bg-muted px-1 py-0.5 font-mono">↵</kbd>
+                {" "}select
+              </span>
+              <span>
+                <kbd className="rounded border bg-muted px-1 py-0.5 font-mono text-[10px]">esc</kbd>
+                {" "}close
+              </span>
             </span>
             <span>{filteredTools.length} tools</span>
           </div>

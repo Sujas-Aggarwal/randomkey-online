@@ -32,18 +32,17 @@ export function AppLayout(): React.JSX.Element {
 
           <div className="flex-1" />
 
-          <Button
-            variant="outline"
-            size="sm"
-            className="hidden sm:flex items-center gap-2 text-muted-foreground text-sm w-48 justify-between"
+          <button
+            type="button"
             onClick={() => setCommandOpen(true)}
             aria-label="Search tools (Cmd+K)"
+            className="hidden sm:flex h-9 w-52 items-center justify-between gap-2 rounded-md border border-input bg-muted/40 px-3 text-sm text-muted-foreground transition-colors hover:bg-muted focus:outline-none"
           >
             <span>Search tools...</span>
-            <kbd className="inline-flex h-5 items-center gap-0.5 rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground">
-              <span className="text-xs">⌘</span>K
+            <kbd className="inline-flex h-5 items-center gap-0.5 rounded border border-border bg-background px-1.5 text-[10px] font-medium text-muted-foreground">
+              <span>⌘</span>K
             </kbd>
-          </Button>
+          </button>
 
           <Button
             variant="ghost"

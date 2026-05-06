@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Star, Clock, Shield, Wifi, Globe, HardDrive } from "lucide-react";
 import { Helmet } from "react-helmet-async";
@@ -104,63 +104,55 @@ interface ToolCardProps {
 }
 
 function ToolCard({ tool, isFavorite, onToggleFavorite }: ToolCardProps): React.JSX.Element {
-  const navigate = useNavigate();
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      void navigate(`/tools/${tool.slug}`);
-    }
-  };
-
   return (
     <div role="article" className="group relative">
       <Link
         to={`/tools/${tool.slug}`}
         className={cn(
-          "flex items-start gap-3 rounded-lg border bg-card p-4",
+          "flex flex-col gap-1 rounded-lg border bg-card px-4 py-3.5",
+          "pr-16", // space for the icon group
           "transition-all duration-150",
           "hover:border-primary/40 hover:shadow-sm",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         )}
-        onKeyDown={handleKeyDown}
         aria-label={`${tool.name}: ${tool.description}`}
       >
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium leading-tight text-foreground group-hover:text-primary transition-colors">
-            {tool.name}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-            {tool.description}
-          </p>
-        </div>
-        <ArrowRight
-          className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-          aria-hidden="true"
-        />
+        <p className="text-sm font-medium leading-tight text-foreground group-hover:text-primary transition-colors">
+          {tool.name}
+        </p>
+        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+          {tool.description}
+        </p>
       </Link>
 
-      <button
-        type="button"
-        onClick={onToggleFavorite}
-        aria-label={
-          isFavorite ? `Remove ${tool.name} from favorites` : `Add ${tool.name} to favorites`
-        }
-        aria-pressed={isFavorite}
-        className={cn(
-          "absolute top-3 right-3 p-1 rounded transition-colors",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          isFavorite
-            ? "text-amber-400 opacity-100"
-            : "text-muted-foreground opacity-0 group-hover:opacity-60 hover:!opacity-100"
-        )}
-      >
-        <Star
-          className="h-3.5 w-3.5"
-          fill={isFavorite ? "currentColor" : "none"}
+      {/* Star + arrow — share one container so they never collide */}
+      <div className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center gap-1">
+        <button
+          type="button"
+          onClick={onToggleFavorite}
+          aria-label={
+            isFavorite ? `Remove ${tool.name} from favorites` : `Add ${tool.name} to favorites`
+          }
+          aria-pressed={isFavorite}
+          className={cn(
+            "p-1 rounded transition-colors",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            isFavorite
+              ? "text-amber-400"
+              : "text-muted-foreground opacity-0 group-hover:opacity-60 hover:!opacity-100"
+          )}
+        >
+          <Star
+            className="h-3.5 w-3.5"
+            fill={isFavorite ? "currentColor" : "none"}
+            aria-hidden="true"
+          />
+        </button>
+        <ArrowRight
+          className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-50 transition-opacity"
           aria-hidden="true"
         />
-      </button>
+      </div>
     </div>
   );
 }
@@ -236,7 +228,7 @@ export function HomePage(): React.JSX.Element {
           <div
             className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2"
             aria-label="Trust indicators"
-          >
+          > 
             {TRUST_BADGES.map(({ icon: Icon, label }) => (
               <span
                 key={label}

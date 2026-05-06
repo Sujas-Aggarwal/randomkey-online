@@ -58,6 +58,10 @@ export default defineConfig(({ mode }) => {
     define: {
       __APP_DOMAIN__: JSON.stringify(domain),
     },
+    worker: {
+      // Use ES modules for workers — required for dynamic import() inside the worker
+      format: "es",
+    },
     build: {
       rollupOptions: {
         output: {
@@ -65,6 +69,7 @@ export default defineConfig(({ mode }) => {
             vendor: ["react", "react-dom", "react-router-dom"],
             ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "cmdk"],
             motion: ["framer-motion"],
+            // openpgp is NOT listed here — it is only imported inside the worker
           },
         },
       },

@@ -1,3 +1,11 @@
+/**
+ * Bulk Password Generator
+ *
+ * Generates multiple passwords at once.
+ * - For count ≤ 10: generates on the main thread (fast enough).
+ * - For count > 10: offloads to the crypto Web Worker with progress tracking.
+ */
+
 import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ToolLayout } from "@/layouts/ToolLayout";
@@ -6,7 +14,13 @@ import { Slider } from "@/components/ui/Slider";
 import { CheckboxTile } from "@/components/ui/Checkbox";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { generatePassword } from "@/utils/password";
+import { useWorker } from "@/hooks/useWorker";
+import type { WorkerResponse, PasswordOpts } from "@/workers/crypto.worker";
 import type { FAQItem } from "@/components/FAQSection";
+
+// ---------------------------------------------------------------------------
+// FAQ
+// ---------------------------------------------------------------------------
 
 const FAQ_ITEMS: FAQItem[] = [
   {
@@ -31,6 +45,10 @@ const FAQ_ITEMS: FAQItem[] = [
   },
 ];
 
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
 const COUNT_OPTIONS = [
   { value: 5, label: "5" },
   { value: 10, label: "10" },
@@ -40,7 +58,18 @@ const COUNT_OPTIONS = [
 
 type Count = 5 | 10 | 20 | 50;
 
-function generateBulk(count: Count, length: number, opts: { uppercase: boolean; lowercase: boolean; digits: boolean; symbols: boolean }): string[] {
+/** Threshold above which generation is delegated to the worker. */
+const WORKER_THRESHOLD = 10;
+
+// ---------------------------------------------------------------------------
+// Main thread generation (small batches)
+// ---------------------------------------------------------------------------
+
+function generateBulkMainThread(
+  count: Count,
+  length: number,
+  opts: { uppercase: boolean; lowercase: boolean; digits: boolean; symbols: boolean },
+): string[] {
   const results: string[] = [];
   for (let i = 0; i < count; i++) {
     try {
@@ -52,29 +81,130 @@ function generateBulk(count: Count, length: number, opts: { uppercase: boolean; 
   return results;
 }
 
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 export default function BulkPasswordPage(): React.JSX.Element {
   const prefersReducedMotion = useReducedMotion();
+
+  // Options
   const [count, setCount] = React.useState<Count>(10);
   const [length, setLength] = React.useState(16);
   const [uppercase, setUppercase] = React.useState(true);
   const [lowercase, setLowercase] = React.useState(true);
   const [digits, setDigits] = React.useState(true);
   const [symbols, setSymbols] = React.useState(true);
+
+  // Output
   const [output, setOutput] = React.useState<string[]>(() =>
-    generateBulk(10, 16, { uppercase: true, lowercase: true, digits: true, symbols: true })
+    generateBulkMainThread(10, 16, { uppercase: true, lowercase: true, digits: true, symbols: true }),
   );
+  const [isWorkerGenerating, setIsWorkerGenerating] = React.useState(false);
+  const [workerProgress, setWorkerProgress] = React.useState(0);
+
+  const taskIdRef = React.useRef<string>("");
+
+  // ---------------------------------------------------------------------------
+  // Worker setup
+  // ---------------------------------------------------------------------------
+
+  const handleMessage = React.useCallback((msg: WorkerResponse) => {
+    if (msg.id !== taskIdRef.current) return;
+
+    switch (msg.type) {
+      case "PROGRESS":
+        setWorkerProgress(msg.percent);
+        break;
+      case "BULK_RESULT":
+        setOutput(msg.passwords);
+        setIsWorkerGenerating(false);
+        setWorkerProgress(100);
+        break;
+      case "ERROR":
+        setIsWorkerGenerating(false);
+        break;
+      default:
+        break;
+    }
+  }, []);
+
+  const { send, ready } = useWorker({ onMessage: handleMessage });
+
+  // ---------------------------------------------------------------------------
+  // Generation logic
+  // ---------------------------------------------------------------------------
 
   const anyEnabled = uppercase || lowercase || digits || symbols;
 
+  const generateViaWorker = React.useCallback(
+    (
+      currentCount: Count,
+      currentLength: number,
+      opts: PasswordOpts,
+    ) => {
+      if (!ready) return;
+      const id = `bulk-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      taskIdRef.current = id;
+      setIsWorkerGenerating(true);
+      setWorkerProgress(0);
+      send({
+        type: "BULK_PASSWORD",
+        id,
+        count: currentCount,
+        opts: { ...opts, length: currentLength },
+      });
+    },
+    [ready, send],
+  );
+
+  const doGenerate = React.useCallback(
+    (
+      currentCount: Count,
+      currentLength: number,
+      currentUppercase: boolean,
+      currentLowercase: boolean,
+      currentDigits: boolean,
+      currentSymbols: boolean,
+    ) => {
+      if (!anyEnabled) return;
+      const opts: PasswordOpts = {
+        length: currentLength,
+        uppercase: currentUppercase,
+        lowercase: currentLowercase,
+        digits: currentDigits,
+        symbols: currentSymbols,
+      };
+
+      if (currentCount > WORKER_THRESHOLD) {
+        generateViaWorker(currentCount, currentLength, opts);
+      } else {
+        setOutput(
+          generateBulkMainThread(currentCount, currentLength, {
+            uppercase: currentUppercase,
+            lowercase: currentLowercase,
+            digits: currentDigits,
+            symbols: currentSymbols,
+          }),
+        );
+      }
+    },
+    [anyEnabled, generateViaWorker],
+  );
+
+  // Re-generate whenever options change
   React.useEffect(() => {
-    if (!anyEnabled) return;
-    setOutput(generateBulk(count, length, { uppercase, lowercase, digits, symbols }));
-  }, [count, length, uppercase, lowercase, digits, symbols, anyEnabled]);
+    doGenerate(count, length, uppercase, lowercase, digits, symbols);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count, length, uppercase, lowercase, digits, symbols]);
 
   const handleRegenerate = React.useCallback(() => {
-    if (!anyEnabled) return;
-    setOutput(generateBulk(count, length, { uppercase, lowercase, digits, symbols }));
-  }, [count, length, uppercase, lowercase, digits, symbols, anyEnabled]);
+    doGenerate(count, length, uppercase, lowercase, digits, symbols);
+  }, [count, length, uppercase, lowercase, digits, symbols, doGenerate]);
+
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
 
   return (
     <ToolLayout
@@ -91,6 +221,7 @@ export default function BulkPasswordPage(): React.JSX.Element {
         <GeneratorPanel
           output={output}
           onRegenerate={handleRegenerate}
+          isGenerating={isWorkerGenerating}
           multiline
           filename="bulk-passwords"
           exportFormats={["txt", "json"]}
@@ -143,6 +274,32 @@ export default function BulkPasswordPage(): React.JSX.Element {
                 <CheckboxTile checked={symbols} onCheckedChange={setSymbols} label="Symbols" />
               </div>
             </fieldset>
+
+            {/* Progress bar for worker-mode generation */}
+            {isWorkerGenerating && count > WORKER_THRESHOLD && (
+              <div
+                className="space-y-2"
+                aria-live="polite"
+                aria-label="Generating passwords"
+              >
+                <div
+                  className="h-1.5 w-full overflow-hidden rounded-full bg-muted"
+                  role="progressbar"
+                  aria-valuenow={workerProgress}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label="Bulk generation progress"
+                >
+                  <div
+                    className="h-full rounded-full bg-primary transition-all duration-300"
+                    style={{ width: `${workerProgress}%` }}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Generating {count} passwords… {workerProgress}%
+                </p>
+              </div>
+            )}
           </div>
         </GeneratorPanel>
       </motion.div>
