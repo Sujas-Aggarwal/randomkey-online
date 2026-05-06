@@ -1,5 +1,5 @@
 /**
- * Core entropy source for randomkey.online.
+ * Core entropy source for this application.
  *
  * ALL cryptographic randomness must flow through this module.
  * Direct calls to window.crypto.getRandomValues elsewhere are forbidden.

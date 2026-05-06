@@ -35,7 +35,7 @@ const FAQ_ITEMS: FAQItem[] = [
   {
     question: "Can I use this offline?",
     answer:
-      "Yes. After your first visit, randomkey.online works fully offline as a Progressive Web App. All generation happens locally in your browser, so there is no server dependency. You can also install it to your home screen for instant access without opening a browser tab.",
+      "Yes. After your first visit, this app works fully offline as a Progressive Web App. All generation happens locally in your browser, so there is no server dependency. You can also install it to your home screen for instant access without opening a browser tab.",
   },
 ];
 

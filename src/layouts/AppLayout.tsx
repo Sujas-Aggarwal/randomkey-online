@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import { Menu, Command } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -68,20 +68,28 @@ export function AppLayout(): React.JSX.Element {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
             <p>
               &copy; {new Date().getFullYear()}{" "}
-              <a
-                href="/"
+              <Link
+                to="/"
                 className="hover:text-foreground transition-colors font-medium"
               >
                 {SITE.name}
-              </a>{" "}
+              </Link>{" "}
               — All generation happens in your browser. Nothing is sent to servers.
             </p>
             <nav aria-label="Footer navigation" className="flex items-center gap-4">
-              <a href="/privacy" className="hover:text-foreground transition-colors">
+              <Link to="/privacy" className="hover:text-foreground transition-colors">
                 Privacy
-              </a>
-              <a href="/about" className="hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/about" className="hover:text-foreground transition-colors">
                 About
+              </Link>
+              <a
+                href="https://github.com/Sujas-Aggarwal/randomkey-online"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                GitHub
               </a>
             </nav>
           </div>

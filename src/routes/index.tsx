@@ -3,6 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppLayout } from "@/layouts/AppLayout";
 import { HomePage } from "@/pages/HomePage";
 
+const PrivacyPage = lazy(() => import("@/pages/PrivacyPage").then((m) => ({ default: m.PrivacyPage })));
+const AboutPage = lazy(() => import("@/pages/AboutPage").then((m) => ({ default: m.AboutPage })));
+
 // Lazy load all tool pages
 const PasswordGenerator = lazy(() => import("@/pages/tools/PasswordGenerator"));
 const PassphraseGenerator = lazy(() => import("@/pages/tools/PassphraseGenerator"));
@@ -125,6 +128,10 @@ const router = createBrowserRouter([
 
       // EDUCATION
       { path: "tools/security-guides", element: <ToolSuspense><SecurityGuides /></ToolSuspense> },
+
+      // INFO PAGES
+      { path: "privacy", element: <ToolSuspense><PrivacyPage /></ToolSuspense> },
+      { path: "about", element: <ToolSuspense><AboutPage /></ToolSuspense> },
     ],
   },
 ]);
